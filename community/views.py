@@ -1,6 +1,20 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Post
 
 
 def index(request):
-    return HttpResponse("community index page")
+    post_list = Post.objects.order_by('-create_date')
+    context = {'post_list': post_list}
+    return render(request, 'community/post_list.html', context)
+
+
+def detail(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    context = {'post': post}
+    return render(request, 'community/detail.html', context)
+
+
+def comment_create(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    post.comment_set.create(content=request.POST.get('content'))
+    return redirect('community:detail', post_id=post.id)
