@@ -2,6 +2,7 @@
 {% block content %}
 <div class="container my-2">
     <table class="table">
+
         <thead>
         <tr class="table-dark">
             <th>번호</th>
@@ -27,5 +28,6 @@
         {% endif %}
         </tbody>
     </table>
+    <a href="{% url 'community:post_create' %}" class="btn btn-primary">글 작성</a>
 </div>
 {% endblock %}
