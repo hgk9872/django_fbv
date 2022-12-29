@@ -1,6 +1,7 @@
+from django.http import HttpResponseNotAllowed
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Post
-from .forms import PostForm
+from .forms import PostForm, CommentForm
 
 
 def index(request):
@@ -17,8 +18,17 @@ def detail(request, post_id):
 
 def comment_create(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
-    post.comment_set.create(content=request.POST.get('content'))
-    return redirect('community:detail', post_id=post.id)
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False) # 임시저장
+            comment.post = post
+            comment.save()
+            return redirect('community:detail', post_id=post.id)
+    else:
+        return HttpResponseNotAllowed('Only POST is possible')
+    context = {'post': post, 'form': form}
+    return render(request, 'community/detail.html', context)
 
 
 def post_create(request):
