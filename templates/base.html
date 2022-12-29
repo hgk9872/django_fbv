@@ -11,7 +11,11 @@
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
     <title>Title</title>
 </head>
+<!-- 부트스트랩 JS-->
+<script src="{% static 'bootstrap.min.js' %}"></script>
 <body>
+<!-- 네비게이션바 -->
+{% include 'navbar.html' %}
 {% block content%}
 {% endblock %}
 </body>
