@@ -5,8 +5,13 @@ from .forms import PostForm, CommentForm
 
 
 def index(request):
-    post_list = Post.objects.order_by('-create_date')
-    context = {'post_list': post_list}
+    ps = Post.objects.order_by('-create_date')
+    q = request.GET.get('q', '')
+    if q:
+        post_list = ps.filter(content__icontains=q)
+    else:
+        post_list = ps
+    context = {'post_list': post_list, 'q': q, }
     return render(request, 'community/post_list.html', context)
 
 
@@ -42,3 +47,15 @@ def post_create(request):
         form = PostForm() # empty form
     context = {'form': form}
     return render(request, 'community/post_form.html', context)
+
+
+# def post_list(request):
+#     qs = Post.objects.all()
+#     q = request.GET.get('q', '')
+#     # q에 해당하는 검색어가 있다면
+#     if q:
+#         qs = qs.filter(content__icontains=q)
+#     # ~/templates/community/post_list.html
+#     return render(request, 'community/post_list.html', {
+#         'post_list': qs,
+#     })
