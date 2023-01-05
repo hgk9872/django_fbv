@@ -5,7 +5,8 @@ from .forms import PostForm, CommentForm
 
 
 def index(request):
-    ps = Post.objects.order_by('-create_date')
+    ps = Post.objects.all()
+    # ps = Post.objects.order_by('-create_date')
     q = request.GET.get('q', '')
     if q:
         post_list = ps.filter(content__icontains=q)
